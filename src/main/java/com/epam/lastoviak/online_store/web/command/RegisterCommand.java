@@ -3,6 +3,7 @@ package com.epam.lastoviak.online_store.web.command;
 import com.epam.lastoviak.online_store.Utils;
 import com.epam.lastoviak.online_store.db.Fields;
 import com.epam.lastoviak.online_store.db.dao.AccountDao;
+import com.epam.lastoviak.online_store.db.dao.ProductDAO;
 import com.epam.lastoviak.online_store.db.dto.Account;
 import org.apache.log4j.Logger;
 
@@ -15,17 +16,18 @@ import static com.epam.lastoviak.online_store.web.Path.*;
 public class RegisterCommand extends Command {
     private static final Logger log = Logger.getLogger(RegisterCommand.class);
 
-    private boolean redirectMode=false;
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         String path = ERROR_PAGE;
         String errorMassage = null;
 
+        request.setAttribute("redirect","ON");
+
        // log.debug("Command starts");
         System.out.println("Command starts");
 
-        HttpSession session = request.getSession();
+            HttpSession session = request.getSession();
 
 
         String password = request.getParameter("password");
@@ -72,7 +74,7 @@ public class RegisterCommand extends Command {
 
             if (!accountDao.registerAccount(account)) {
                 errorMassage = "Error. Please try again later";
-                request.setAttribute("errorMassage", errorMassage);
+                session.setAttribute("errorMassage", errorMassage);
                 //log
                 System.out.println(errorMassage);
                 return path;
@@ -80,7 +82,7 @@ public class RegisterCommand extends Command {
                 session.setAttribute("account", account);
                 //log
                 System.out.println(session);
-                redirectMode=true;
+
 
                 path = MAIN_PAGE;
             }
@@ -92,7 +94,4 @@ public class RegisterCommand extends Command {
 
     }
 
-    public boolean isRedirectMode() {
-        return redirectMode;
-    }
 }

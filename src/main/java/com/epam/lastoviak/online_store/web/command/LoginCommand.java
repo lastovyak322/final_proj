@@ -15,7 +15,7 @@ import static com.epam.lastoviak.online_store.db.Fields.*;
 
 public class LoginCommand extends Command {
     private static final Logger log = Logger.getLogger(LoginCommand.class);
-    private final boolean redirectMode=false;
+
 
 
     @Override
@@ -85,8 +85,5 @@ public class LoginCommand extends Command {
 
     }
 
-    @Override
-    public boolean isRedirectMode() {
-        return false;
-    }
+
 }

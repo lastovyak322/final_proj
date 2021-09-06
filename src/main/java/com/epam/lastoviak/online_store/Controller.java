@@ -40,7 +40,7 @@ public class Controller extends HttpServlet {
         //log
 
         if (path != null) {
-            if (command.isRedirectMode()){
+            if (request.getAttribute("redirect")!=null){
                 response.sendRedirect(path);
                 //log
                 System.out.println("redirect");

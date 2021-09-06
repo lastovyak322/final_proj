@@ -11,7 +11,7 @@ import static com.epam.lastoviak.online_store.db.Fields.*;
 public class AccountDao {
     DBManager dbManager = DBManager.getInstance();
     private static final String SQL_REGISTER_NEW_ACCOUNT =
-            "INSERT INTO account (password, email, name, phone,role_id) VALUES (?,?,?,?,?,?)";
+            "INSERT INTO account (password, email, name, phone,role_id,status_id) VALUES (?,?,?,?,?,?)";
     private static final String SQL_FIND_ACCOUNT_BY_PHONE =
             "SELECT * FROM account WHERE phone=?";
     private static final String SQL_FIND_ACCOUNT_BY_EMAIL =

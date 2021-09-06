@@ -33,6 +33,7 @@
 
 
         <button type="submit" class="registerbtn">Log in</button>
+        <p>dont have account ?<a href="register_page.jsp">Registration</a>.</p>
     </div>
 
 </form>
