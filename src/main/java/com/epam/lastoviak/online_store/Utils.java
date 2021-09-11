@@ -9,4 +9,10 @@ public class Utils {
         }
         return false;
     }
+
+    public static void main(String[] args) {
+Object a= "a";
+String b="a";
+        System.out.println(true);
+    }
 }

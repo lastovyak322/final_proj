@@ -17,7 +17,6 @@ public class LoginCommand extends Command {
     private static final Logger log = Logger.getLogger(LoginCommand.class);
 
 
-
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         String forward = ERROR_PAGE;
@@ -25,7 +24,7 @@ public class LoginCommand extends Command {
 
         //log.debug("Command start");
         System.out.println("start");
-
+        request.setAttribute("redirect", "ON");
         HttpSession session = request.getSession();
 
 
@@ -35,11 +34,11 @@ public class LoginCommand extends Command {
 
 
         String password = request.getParameter("password");
-       // log.trace("Got request parameter: password");
+        // log.trace("Got request parameter: password");
         System.out.println(password);
 
 
-        if (Utils.isEmptyForm(email)||Utils.isEmptyForm(password)) {
+        if (Utils.isEmptyForm(email) || Utils.isEmptyForm(password)) {
             errorMassage = "email and password can`t be empty";
             session.setAttribute("errorMessage", errorMassage);
             //log.error("error: " + errorMassage);
@@ -47,7 +46,7 @@ public class LoginCommand extends Command {
             return forward;
         }
 
-        Account account = new AccountDao().findAccountByUniqueField(email,ACCOUNT_EMAIL);
+        Account account = new AccountDao().findAccountByUniqueField(email, ACCOUNT_EMAIL);
         log.trace("Got account by email >>> " + account);
 
         if (account == null || !password.equals(account.getPassword())) {
@@ -60,12 +59,7 @@ public class LoginCommand extends Command {
         } else {
             int role_id = account.getRoleId();
             log.trace("Got role_id >>> " + role_id);
-            if (role_id == 1) {
-                forward = MAIN_PAGE;
-            }
-            if (role_id == 2) {
-                forward = ADMIN_MAIN_PAGE;
-            }
+            forward=MAIN_PAGE;
 
             session.setAttribute("account", account);
             //log

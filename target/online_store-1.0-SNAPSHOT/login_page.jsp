@@ -12,7 +12,7 @@
 
 </head>
 <body>
-<form action="/hello">
+<form action="/hello" method="post">
     <input type="hidden" name="command" value="login"/>
     <div class="container">
         <h1>Login</h1>

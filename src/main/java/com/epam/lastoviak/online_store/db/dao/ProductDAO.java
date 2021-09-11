@@ -10,16 +10,30 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProductDAO {
-    private DBManager dbManager=DBManager.getInstance();
-    private static final String SQL_ADD_NEW_PRODUCT =
-            "INSERT INTO product (name, price, amount, category_id) VALUES (?,?,?,?)";
+
+    private DBManager dbManager = DBManager.getInstance();
     private static final String SQL_FIND_PRODUCT_BY_ID =
             "SELECT * FROM product WHERE id=?";
+    private static final String SQL_GET_NUMBER_OF_RECORDS_BY_CATEGORY_ID =
+            "SELECT COUNT(*) FROM product WHERE category_id=?";
+    private static final String SQL_ADD_NEW_PRODUCT =
+            "INSERT INTO product (name, price, amount, category_id) VALUES (?,?,?,?)";
+    private static final String SQL_FIND_PRODUCT_BY_CATEGORY_ID =
+            "SELECT * FROM product WHERE category_id=?";
     private static final String SQL_CHANGE_PRODUCT_PRICE =
             "UPDATE product  SET price = ? WHERE id = ?";
+    private static final String SQL_GET_NUMBER_OF_FILTERED_RECORDS =
+            "SELECT COUNT(*) FROM product INNER JOIN product_specifications ps on product.id = ps.product_Id WHERE ";
+    private static final String SQL_FIND_QUERY_START = "SELECT id, name, price, amount, category_id, last_update " +
+            "FROM product INNER JOIN product_specifications ps on product.id = ps.product_Id WHERE ";
+    private static final String SQL_FIND_PRODUCT_BY_CATEGORY_ID_WITH_LIMIT =
+            "SELECT * FROM product WHERE category_id=? LIMIT ?,?";
+
 
 
     private static final String DTO_ID = "id";
@@ -30,26 +44,27 @@ public class ProductDAO {
     private static final String PRODUCT_LAST_UPDATE = "last_update";
 
 
-
-
-
-    private boolean addProduct(Product product){
+    private boolean addProduct(Product product) {
         boolean ans = false;
         Connection connection = null;
         PreparedStatement pstm = null;
+        ResultSet rs = null;
 
         try {
             connection = dbManager.getConnection();
-            if (connection!=null) {
+            if (connection != null) {
                 pstm = connection.prepareStatement(SQL_ADD_NEW_PRODUCT);
                 int m = 0;
                 pstm.setString(++m, product.getName());
                 pstm.setBigDecimal(++m, product.getPrice());
                 pstm.setInt(++m, product.getAmount());
                 pstm.setInt(++m, product.getCategoryId());
-                if(pstm.executeUpdate()>0){
-                    ans=true;
+                if (pstm.executeUpdate() > 0) {
+                    ans = true;
                 }
+                rs = pstm.getGeneratedKeys();
+                rs.next();
+                product.setId(rs.getInt(1));
                 connection.commit();
 
             }
@@ -61,6 +76,7 @@ public class ProductDAO {
         } finally {
             dbManager.closePreparedStatement(pstm);
             dbManager.closeConnection(connection);
+            dbManager.closeResultSet(rs);
         }
         return ans;
     }
@@ -70,15 +86,15 @@ public class ProductDAO {
         Connection connection = null;
         PreparedStatement pstm = null;
         ResultSet rs = null;
-        ProductFiller productFiller=new ProductFiller();
+        ProductFiller productFiller = new ProductFiller();
 
         try {
             connection = dbManager.getConnection();
-            if (connection!=null) {
+            if (connection != null) {
                 pstm = connection.prepareStatement(SQL_FIND_PRODUCT_BY_ID);
                 pstm.setInt(1, id);
                 rs = pstm.executeQuery();
-                if(rs.next()) {
+                if (rs.next()) {
                     product = productFiller.fill(rs);
                 }
                 dbManager.commit(connection);
@@ -96,22 +112,101 @@ public class ProductDAO {
         return product;
     }
 
+    public List<Product> getProductsByManufacturerId(String[] manufacturer) {
+        String SQL_FIND_PRODUCTS_BY_MANUFACTURER_ID = Arrays.stream(manufacturer).
+                collect(Collectors.joining(",", "SELECT * " +
+                        "FROM `product` WHERE `manufacturer_id` IN(", ")"));
+        return null;
+
+    }
+
     public List<Product> getProductsByCategoryId(int categoryId) {
-        List<Product> productList=new ArrayList<>();
+        List<Product> productList = new ArrayList<>();
         Product product = null;
         Connection connection = null;
         PreparedStatement pstm = null;
         ResultSet rs = null;
-        ProductFiller productFiller=new ProductFiller();
+        ProductFiller productFiller = new ProductFiller();
 
         try {
             connection = dbManager.getConnection();
-            if (connection!=null) {
-                pstm = connection.prepareStatement(SQL_FIND_PRODUCT_BY_ID);
+            if (connection != null) {
+                pstm = connection.prepareStatement(SQL_FIND_PRODUCT_BY_CATEGORY_ID);
                 pstm.setInt(1, categoryId);
                 rs = pstm.executeQuery();
-                while(rs.next()) {
-                        product = productFiller.fill(rs);
+                while (rs.next()) {
+                    product = productFiller.fill(rs);
+                    productList.add(product);
+                }
+                dbManager.commit(connection);
+            }
+
+        } catch (SQLException throwables) {
+            //log
+            dbManager.rollback(connection);
+            throwables.printStackTrace();
+        } finally {
+            dbManager.closeResultSet(rs);
+            dbManager.closePreparedStatement(pstm);
+            dbManager.closeConnection(connection);
+        }
+        return productList;
+
+    }
+    public List<Product> getProductsByCategoryIdWithLimit(int categoryId,int limit,int numberOfRecord) {
+        List<Product> productList = new ArrayList<>();
+        Product product = null;
+        Connection connection = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        ProductFiller productFiller = new ProductFiller();
+
+        try {
+            connection = dbManager.getConnection();
+            if (connection != null) {
+                pstm = connection.prepareStatement(SQL_FIND_PRODUCT_BY_CATEGORY_ID_WITH_LIMIT);
+                pstm.setInt(1, categoryId);
+                pstm.setInt(2, limit);
+                pstm.setInt(3, numberOfRecord);
+                rs = pstm.executeQuery();
+                while (rs.next()) {
+                    product = productFiller.fill(rs);
+                    productList.add(product);
+                }
+                dbManager.commit(connection);
+            }
+
+        } catch (SQLException throwables) {
+            //log
+            dbManager.rollback(connection);
+            throwables.printStackTrace();
+        } finally {
+            dbManager.closeResultSet(rs);
+            dbManager.closePreparedStatement(pstm);
+            dbManager.closeConnection(connection);
+        }
+        return productList;
+
+    }
+
+    public List<Product> getProductsByGeneratedSql(String sqlQuery) {
+        List<Product> productList = new ArrayList<>();
+        Product product = null;
+        Connection connection = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        ProductFiller productFiller = new ProductFiller();
+        StringBuilder generatedQuery = new StringBuilder(SQL_FIND_QUERY_START);
+        generatedQuery.append(" ").append(sqlQuery);
+        System.out.println(generatedQuery);
+
+        try {
+            connection = dbManager.getConnection();
+            if (connection != null) {
+                pstm = connection.prepareStatement(generatedQuery.toString());
+                rs = pstm.executeQuery();
+                while (rs.next()) {
+                    product = productFiller.fill(rs);
                     productList.add(product);
                 }
                 dbManager.commit(connection);
@@ -130,17 +225,17 @@ public class ProductDAO {
     }
 
     public boolean changeProductPriceById(int id, BigDecimal price) {
-        boolean  ans=false;
+        boolean ans = false;
         Connection connection = null;
         PreparedStatement pstm = null;
         try {
             connection = dbManager.getConnection();
-            if(connection!=null) {
+            if (connection != null) {
                 pstm = connection.prepareStatement(SQL_CHANGE_PRODUCT_PRICE);
                 pstm.setBigDecimal(1, price);
                 pstm.setInt(2, id);
-                if(pstm.executeUpdate()>0){
-                    ans=true;
+                if (pstm.executeUpdate() > 0) {
+                    ans = true;
                 }
                 dbManager.commit(connection);
             }
@@ -148,9 +243,72 @@ public class ProductDAO {
         } catch (SQLException throwables) {
             //log
             dbManager.rollback(connection);
-            ans=false;
+            ans = false;
             throwables.printStackTrace();
-        }finally {
+        } finally {
+            dbManager.closePreparedStatement(pstm);
+            dbManager.closeConnection(connection);
+        }
+        return ans;
+    }
+
+    public int getNumberOfFilteredRecords(String sqlQuery) {
+
+        StringBuilder generatedQuery = new StringBuilder(SQL_GET_NUMBER_OF_FILTERED_RECORDS);
+        generatedQuery.append(" ").append(sqlQuery);
+        System.out.println(generatedQuery);
+        Connection connection = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        int ans=0;
+        try {
+            connection = dbManager.getConnection();
+            if (connection != null) {
+                pstm=connection.prepareStatement(generatedQuery.toString());
+                rs= pstm.executeQuery();
+                while (rs.next()) {
+                    ans=rs.getInt(1);
+                }
+                dbManager.commit(connection);
+            }
+
+
+        } catch (SQLException throwables) {
+            //log
+            dbManager.rollback(connection);
+            throwables.printStackTrace();
+        } finally {
+            dbManager.closeResultSet(rs);
+            dbManager.closePreparedStatement(pstm);
+            dbManager.closeConnection(connection);
+        }
+        return ans;
+    }
+    public int getNumberOfRecords(int category_id) {
+
+        Connection connection = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        int ans=0;
+        try {
+            connection = dbManager.getConnection();
+            if (connection != null) {
+                pstm=connection.prepareStatement(SQL_GET_NUMBER_OF_RECORDS_BY_CATEGORY_ID);
+                pstm.setInt(1,category_id);
+                rs= pstm.executeQuery();
+                while (rs.next()) {
+                    ans=rs.getInt(1);
+                }
+                dbManager.commit(connection);
+            }
+
+
+        } catch (SQLException throwables) {
+            //log
+            dbManager.rollback(connection);
+            throwables.printStackTrace();
+        } finally {
+            dbManager.closeResultSet(rs);
             dbManager.closePreparedStatement(pstm);
             dbManager.closeConnection(connection);
         }
@@ -171,6 +329,7 @@ public class ProductDAO {
                 product.setAmount(rs.getInt(PRODUCT_AMOUNT));
                 product.setCategoryId(rs.getInt(PRODUCT_CATEGORY_ID));
                 product.setLastUpdate(rs.getTimestamp(PRODUCT_LAST_UPDATE));
+                //product.setLastUpdate(rs.getTimestamp(PRODUCT_LAST_UPDATE));
                 return product;
             } catch (SQLException throwables) {
                 throwables.printStackTrace();

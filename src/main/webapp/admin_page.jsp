@@ -12,5 +12,10 @@
 </head>
 <body>
 Admin page
+<form action="/hello" method="get">
+    <input type="hidden" name="command" value="logout">
+    <button type="submit">Logout</button>
+
+</form>
 </body>
 </html>

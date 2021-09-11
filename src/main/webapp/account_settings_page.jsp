@@ -12,7 +12,12 @@
 </head>
 <body>
 Account settings page
-<a href="/hello?command=logout">Log out</a>
+<form action="/hello" method="get">
+    <input type="hidden" name="command" value="logout">
+    <button type="submit">Logout</button>
+
+</form>
+
 
 </body>
 </html>

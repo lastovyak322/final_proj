@@ -66,4 +66,15 @@ public class Product {
     this.lastUpdate = lastUpdate;
   }
 
+  @Override
+  public String toString() {
+    return "Product{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", price=" + price +
+            ", amount=" + amount +
+            ", categoryId=" + categoryId +
+            ", lastUpdate=" + lastUpdate +
+            '}';
+  }
 }
