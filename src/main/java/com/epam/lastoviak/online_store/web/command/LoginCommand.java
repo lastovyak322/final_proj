@@ -19,7 +19,7 @@ public class LoginCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        String forward = ERROR_PAGE;
+        String path = ERROR_PAGE;
         String errorMassage = null;
 
         //log.debug("Command start");
@@ -43,7 +43,7 @@ public class LoginCommand extends Command {
             session.setAttribute("errorMessage", errorMassage);
             //log.error("error: " + errorMassage);
             System.out.println(errorMassage);
-            return forward;
+            return path;
         }
 
         Account account = new AccountDao().findAccountByUniqueField(email, ACCOUNT_EMAIL);
@@ -54,12 +54,12 @@ public class LoginCommand extends Command {
             session.setAttribute("errorMessage", errorMassage);
             //log.error("error: " + errorMassage);
             System.out.println(errorMassage);
-            return forward;
+            return path;
 
         } else {
             int role_id = account.getRoleId();
             log.trace("Got role_id >>> " + role_id);
-            forward=MAIN_PAGE;
+            path=MAIN_PAGE;
 
             session.setAttribute("account", account);
             //log
@@ -75,7 +75,7 @@ public class LoginCommand extends Command {
         //log.debug("Command finished");
         System.out.println("finish");
 
-        return forward;
+        return path;
 
     }
 

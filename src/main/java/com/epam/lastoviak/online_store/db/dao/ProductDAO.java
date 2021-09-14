@@ -16,7 +16,10 @@ import java.util.stream.Collectors;
 
 public class ProductDAO {
 
+
     private DBManager dbManager = DBManager.getInstance();
+    private static final String SQL_CHANGE_PRODUCT_AMOUNT =
+            "UPDATE product SET amount =? WHERE id=?";
     private static final String SQL_FIND_PRODUCT_BY_ID =
             "SELECT * FROM product WHERE id=?";
     private static final String SQL_GET_NUMBER_OF_RECORDS_BY_CATEGORY_ID =
@@ -33,7 +36,6 @@ public class ProductDAO {
             "FROM product INNER JOIN product_specifications ps on product.id = ps.product_Id WHERE ";
     private static final String SQL_FIND_PRODUCT_BY_CATEGORY_ID_WITH_LIMIT =
             "SELECT * FROM product WHERE category_id=? LIMIT ?,?";
-
 
 
     private static final String DTO_ID = "id";
@@ -96,9 +98,11 @@ public class ProductDAO {
                 rs = pstm.executeQuery();
                 if (rs.next()) {
                     product = productFiller.fill(rs);
+
                 }
                 dbManager.commit(connection);
             }
+
 
         } catch (SQLException throwables) {
             //log
@@ -109,6 +113,7 @@ public class ProductDAO {
             dbManager.closePreparedStatement(pstm);
             dbManager.closeConnection(connection);
         }
+
         return product;
     }
 
@@ -153,7 +158,8 @@ public class ProductDAO {
         return productList;
 
     }
-    public List<Product> getProductsByCategoryIdWithLimit(int categoryId,int limit,int numberOfRecord) {
+
+    public List<Product> getProductsByCategoryIdWithLimit(int categoryId, int limit, int numberOfRecord) {
         List<Product> productList = new ArrayList<>();
         Product product = null;
         Connection connection = null;
@@ -260,14 +266,14 @@ public class ProductDAO {
         Connection connection = null;
         PreparedStatement pstm = null;
         ResultSet rs = null;
-        int ans=0;
+        int ans = 0;
         try {
             connection = dbManager.getConnection();
             if (connection != null) {
-                pstm=connection.prepareStatement(generatedQuery.toString());
-                rs= pstm.executeQuery();
+                pstm = connection.prepareStatement(generatedQuery.toString());
+                rs = pstm.executeQuery();
                 while (rs.next()) {
-                    ans=rs.getInt(1);
+                    ans = rs.getInt(1);
                 }
                 dbManager.commit(connection);
             }
@@ -284,20 +290,21 @@ public class ProductDAO {
         }
         return ans;
     }
+
     public int getNumberOfRecords(int category_id) {
 
         Connection connection = null;
         PreparedStatement pstm = null;
         ResultSet rs = null;
-        int ans=0;
+        int ans = 0;
         try {
             connection = dbManager.getConnection();
             if (connection != null) {
-                pstm=connection.prepareStatement(SQL_GET_NUMBER_OF_RECORDS_BY_CATEGORY_ID);
-                pstm.setInt(1,category_id);
-                rs= pstm.executeQuery();
+                pstm = connection.prepareStatement(SQL_GET_NUMBER_OF_RECORDS_BY_CATEGORY_ID);
+                pstm.setInt(1, category_id);
+                rs = pstm.executeQuery();
                 while (rs.next()) {
-                    ans=rs.getInt(1);
+                    ans = rs.getInt(1);
                 }
                 dbManager.commit(connection);
             }
@@ -312,6 +319,36 @@ public class ProductDAO {
             dbManager.closePreparedStatement(pstm);
             dbManager.closeConnection(connection);
         }
+        return ans;
+    }
+
+    public boolean changeAmount(int productId, int amount){
+
+        boolean ans=false;
+        Connection connection = null;
+        PreparedStatement pstm = null;
+        try {
+            connection = dbManager.getConnection();
+            if (connection!=null) {
+                pstm = connection.prepareStatement(SQL_CHANGE_PRODUCT_AMOUNT);
+                pstm.setInt(1, amount);
+                pstm.setInt(2, productId);
+                if(pstm.executeUpdate()>0){
+                    ans=true;
+                }
+                dbManager.commit(connection);
+            }
+
+        } catch (SQLException throwables) {
+            //log
+            dbManager.rollback(connection);
+            ans = false;
+            throwables.printStackTrace();
+        } finally {
+            dbManager.closePreparedStatement(pstm);
+            dbManager.closeConnection(connection);
+        }
+
         return ans;
     }
 

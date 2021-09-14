@@ -17,14 +17,15 @@
     <c:when test="${sessionScope.account.roleId==2}"><a href="admin_page.jsp"> AdminMenu</a> </c:when>
     <c:when test="${sessionScope.account.roleId==1}"><a href="account_settings_page.jsp"> UserMenu</a></c:when>
 </c:choose>
+<p><a href="account_cart_page.jsp">Cart</a> </p>
 <br>
 <br>
 <br>
 Categories
 <br>
-<a href="/hello?command=showProductsByCategory&categoryId=1">Kick scooters</a>
+<a href="/hello?command=showProductsByCategory&categoryId=1&filter=OFF">Kick scooters</a>
 <br>
-<a href="/hello?command=showProductsByCategory&categoryId=2">Hoverboards</a>
+<a href="/hello?command=showProductsByCategory&categoryId=2&filter=OFF">Hoverboards</a>
 
 
 

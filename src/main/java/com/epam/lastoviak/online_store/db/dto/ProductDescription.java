@@ -3,25 +3,25 @@ package com.epam.lastoviak.online_store.db.dto;
 
 public class ProductDescription {
 
-  private long productId;
-  private long languageId;
+  private int productId;
+  private int languageId;
   private String description;
 
 
-  public long getProductId() {
+  public int getProductId() {
     return productId;
   }
 
-  public void setProductId(long productId) {
+  public void setProductId(int productId) {
     this.productId = productId;
   }
 
 
-  public long getLanguageId() {
+  public int getLanguageId() {
     return languageId;
   }
 
-  public void setLanguageId(long languageId) {
+  public void setLanguageId(int languageId) {
     this.languageId = languageId;
   }
 

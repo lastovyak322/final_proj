@@ -10,8 +10,8 @@
 <html>
 <head>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-    <jsp:useBean id="product" class="com.epam.lastoviak.online_store.db.dto.Product"/>
-    <jsp:useBean id="productList" scope="request" type="java.util.List"/>
+        <jsp:useBean id="product" class="com.epam.lastoviak.online_store.db.dto.Product"/>
+        <jsp:useBean id="productList" scope="request" type="java.util.List"/>
     <title>Title</title>
 </head>
 <body>
@@ -20,6 +20,7 @@
 <c:forEach var="product"  items="${productList}">
     <p>${product.name}</p>
     <p>${product.price}</p>
+    <p><a href="/hello?command=productDetailedPage&productId=${product.id}">Details </a></p>
 </c:forEach>
 <br>
 

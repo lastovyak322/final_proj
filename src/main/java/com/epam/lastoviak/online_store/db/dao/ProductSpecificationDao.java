@@ -37,9 +37,6 @@ public class ProductSpecificationDao {
                 if (pstm.executeUpdate() > 0) {
                     ans = true;
                 }
-//                rs=pstm.getGeneratedKeys();
-//                rs.next();
-//                productSpecifications.setId(rs.getInt(1));
                 connection.commit();
 
             }
