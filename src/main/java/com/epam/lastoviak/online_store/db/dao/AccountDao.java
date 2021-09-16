@@ -3,12 +3,14 @@ package com.epam.lastoviak.online_store.db.dao;
 import com.epam.lastoviak.online_store.db.DBManager;
 import com.epam.lastoviak.online_store.db.DTOFiller;
 import com.epam.lastoviak.online_store.db.dto.Account;
+import com.epam.lastoviak.online_store.db.dto.Product;
 
 import java.sql.*;
 
 import static com.epam.lastoviak.online_store.db.Fields.*;
 
 public class AccountDao {
+    private static final String SQL_FIND_ACCOUNT_BY_ID = "SELECT * FROM account WHERE id=?";;
     DBManager dbManager = DBManager.getInstance();
     private static final String SQL_REGISTER_NEW_ACCOUNT =
             "INSERT INTO account (password, email, name, phone,role_id,status_id) VALUES (?,?,?,?,?,?)";
@@ -23,7 +25,39 @@ public class AccountDao {
     private static final String SQL_CHANGE_ACCOUNT_ROLE =
             "UPDATE account  SET role_id = ?, last_update=DEFAULT WHERE id = ?";
 
+    public Account getAccountById(int id) {
+        Account account = null;
+        Connection connection = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        AccountFiller accountFiller = new AccountFiller();
 
+        try {
+            connection = dbManager.getConnection();
+            if (connection != null) {
+                pstm = connection.prepareStatement(SQL_FIND_ACCOUNT_BY_ID);
+                pstm.setInt(1, id);
+                rs = pstm.executeQuery();
+                if (rs.next()) {
+                    account = accountFiller.fill(rs);
+
+                }
+                dbManager.commit(connection);
+            }
+
+
+        } catch (SQLException throwables) {
+            //log
+            dbManager.rollback(connection);
+            throwables.printStackTrace();
+        } finally {
+            dbManager.closeResultSet(rs);
+            dbManager.closePreparedStatement(pstm);
+            dbManager.closeConnection(connection);
+        }
+
+        return account;
+    }
 
 
 

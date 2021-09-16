@@ -10,4 +10,5 @@ public final class Path {
     public static final String PRODUCT_LIST_PAGE = "/product_list_page.jsp";
     public static final String PRODUCT_DETAILED_PAGE = "/product_detailed_page.jsp";
     public static final String CART_PAGE = "/account_cart_page.jsp";
+    public static final String CHANGE_USER_STATUS = "/change_user_status_page.jsp";
 }
