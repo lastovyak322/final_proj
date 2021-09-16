@@ -1,57 +1,46 @@
 package com.epam.lastoviak.online_store.db.dto;
 
 
-import java.math.BigDecimal;
-
 public class OrderProduct {
 
-  private int
- receiptId;
-  private int
- productId;
-  private BigDecimal price;
-  private int
- count;
+  private long receiptId;
+  private long productId;
+  private double price;
+  private long count;
 
 
-  public int
- getReceiptId() {
+  public long getReceiptId() {
     return receiptId;
   }
 
-  public void setReceiptId(int
- receiptId) {
+  public void setReceiptId(long receiptId) {
     this.receiptId = receiptId;
   }
 
 
-  public int
- getProductId() {
+  public long getProductId() {
     return productId;
   }
 
-  public void setProductId(int
- productId) {
+  public void setProductId(long productId) {
     this.productId = productId;
   }
 
 
-  public BigDecimal getPrice() {
+  public double getPrice() {
     return price;
   }
 
-  public void setPrice(BigDecimal price) {
+  public void setPrice(double price) {
     this.price = price;
   }
 
 
-  public int
- getCount() {
+  public long getCount() {
     return count;
   }
 
-  public void setCount(int
- count) {
+  public void setCount(long count) {
     this.count = count;
   }
 

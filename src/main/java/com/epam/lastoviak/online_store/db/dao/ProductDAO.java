@@ -9,7 +9,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProductDAO {
@@ -20,8 +22,6 @@ public class ProductDAO {
             "UPDATE product SET amount =? WHERE id=?";
     private static final String SQL_FIND_PRODUCT_BY_ID =
             "SELECT * FROM product WHERE id=?";
-    private static final String SQL_FIND_PRODUCTS_BY_ID =
-            "SELECT * FROM product WHERE id IN";
     private static final String SQL_GET_NUMBER_OF_RECORDS_BY_CATEGORY_ID =
             "SELECT COUNT(*) FROM product WHERE category_id=?";
     private static final String SQL_ADD_NEW_PRODUCT =
@@ -36,8 +36,6 @@ public class ProductDAO {
             "FROM product INNER JOIN product_specifications ps on product.id = ps.product_Id WHERE ";
     private static final String SQL_FIND_PRODUCT_BY_CATEGORY_ID_WITH_LIMIT =
             "SELECT * FROM product WHERE category_id=? LIMIT ?,?";
-    private static final String SQL_GET_PRODUCT_AMOUNT_BY_PRODUCT_ID =
-            "SELECT amount FROM product WHERE id=? ";
 
 
     private static final String DTO_ID = "id";
@@ -119,8 +117,13 @@ public class ProductDAO {
         return product;
     }
 
+    public List<Product> getProductsByManufacturerId(String[] manufacturer) {
+        String SQL_FIND_PRODUCTS_BY_MANUFACTURER_ID = Arrays.stream(manufacturer).
+                collect(Collectors.joining(",", "SELECT * " +
+                        "FROM `product` WHERE `manufacturer_id` IN(", ")"));
+        return null;
 
-
+    }
 
     public List<Product> getProductsByCategoryId(int categoryId) {
         List<Product> productList = new ArrayList<>();
@@ -319,19 +322,19 @@ public class ProductDAO {
         return ans;
     }
 
-    public boolean changeAmount(int productId, int amount) {
+    public boolean changeAmount(int productId, int amount){
 
-        boolean ans = false;
+        boolean ans=false;
         Connection connection = null;
         PreparedStatement pstm = null;
         try {
             connection = dbManager.getConnection();
-            if (connection != null) {
+            if (connection!=null) {
                 pstm = connection.prepareStatement(SQL_CHANGE_PRODUCT_AMOUNT);
                 pstm.setInt(1, amount);
                 pstm.setInt(2, productId);
-                if (pstm.executeUpdate() > 0) {
-                    ans = true;
+                if(pstm.executeUpdate()>0){
+                    ans=true;
                 }
                 dbManager.commit(connection);
             }
@@ -347,76 +350,6 @@ public class ProductDAO {
         }
 
         return ans;
-    }
-
-
-
-    public boolean decreaseAmountUponPurchase(Connection con, List<Product> productList, Map<Product, Integer> cart) throws Exception {
-        boolean ans =false;
-        Set<Map.Entry<Product, Integer>> updatedProductSet;
-
-        productList.forEach(x -> cart.put(x, cart.remove(x)));
-
-        updatedProductSet = cart.entrySet();
-
-        Set<Map.Entry<Product, Integer>> notInStockProductList = updatedProductSet.stream().
-                filter(x -> x.getKey().getAmount() < x.getValue()).collect(Collectors.toSet());
-
-        PreparedStatement pstm = null;
-
-        if (notInStockProductList.size() != 0) {
-            throw new Exception();
-        }
-        try {
-            pstm = con.prepareStatement(SQL_CHANGE_PRODUCT_AMOUNT);
-
-            for (Map.Entry<Product, Integer> x : updatedProductSet) {
-                pstm.setInt(1, x.getKey().getAmount() - x.getValue());
-                pstm.setInt(2, x.getKey().getId());
-                pstm.addBatch();
-            }
-
-            int[] result = pstm.executeBatch();
-            for (int x : result) {
-                if (x < 0) {
-                   return false;
-                }
-            }
-
-            ans=true;
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } finally {
-            dbManager.closePreparedStatement(pstm);
-        }
-
-        return ans;
-    }
-
-    public List<Product> selectForRegister(Connection con, Set<Map.Entry<Product, Integer>> cartSet) {
-        List<Product> productList = new ArrayList<>();
-        Product product = null;
-        StringJoiner sj = new StringJoiner(",", "(", ")");
-        cartSet.forEach(x -> sj.add(String.valueOf(x.getKey().getId())));
-
-        PreparedStatement pstm = null;
-        ResultSet rs = null;
-        try {
-            System.out.println(sj.toString());
-            pstm = con.prepareStatement(sj.toString());
-            rs = pstm.executeQuery();
-            while (rs.next()) {
-                product = new ProductFiller().fill(rs);
-                productList.add(product);
-            }
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } finally {
-            dbManager.closeResultSet(rs);
-            dbManager.closePreparedStatement(pstm);
-        }
-        return productList;
     }
 
 

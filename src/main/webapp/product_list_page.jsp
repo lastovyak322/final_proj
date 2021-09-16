@@ -52,6 +52,7 @@ Filter
     <input type="hidden" name="filter" value="ON" />
     <input type="hidden" name="command" value="showProductsByCategory" />
 
+
     <input type="text" name="minPrice"> Min Price
 <br>
     <input type="text" name="maxPrice"> Max price
