@@ -15,7 +15,7 @@ public class CommandContainer {
         commands.put("login",new LoginCommand());
         commands.put("logout",new LogoutCommand());
         commands.put("showProductsByCategory",new ShowListOfProductCommand());
-        commands.put("productDetailedPage",new ProductDetailedPageCommand());
+        commands.put("productDetailedPage",new ShowProductDetailedPageCommand());
         commands.put("addToCart",new AddToCartCommand());
         commands.put("decreaseAmount",new DecreaseAmountInCartCommand ());
         commands.put("deleteProduct",new DeleteProductFromCartCommand ());

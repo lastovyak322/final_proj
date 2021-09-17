@@ -210,11 +210,11 @@ public class AccountDao {
                 account.setEmail(rs.getString(ACCOUNT_EMAIL));
                 account.setName(rs.getString(ACCOUNT_NAME));
                 account.setPhone(rs.getString(ACCOUNT_PHONE));
-                account.setId(rs.getInt(DTO_ID));
+                account.setId(rs.getInt(ID));
                 account.setRoleId(rs.getInt(ACCOUNT_ROLE_ID));
-                account.setStatusId(rs.getInt(ACCOUNT_STATUS_ID));
-                account.setCreateTime(rs.getTimestamp(ACCOUNT_CREATE_TIME));
-                account.setLastUpdate(rs.getTimestamp(ACCOUNT_LAST_UPDATE));
+                account.setStatusId(rs.getInt(STATUS_ID));
+                account.setCreateTime(rs.getTimestamp(CREATE_TIME));
+                account.setLastUpdate(rs.getTimestamp(LAST_UPDATE));
                 return account;
             } catch (SQLException throwables) {
                 throwables.printStackTrace();

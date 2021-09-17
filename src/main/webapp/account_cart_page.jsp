@@ -41,6 +41,8 @@ Product cart
     </c:otherwise>
 
 </c:choose>
+<br>
+
 
 </body>
 </html>

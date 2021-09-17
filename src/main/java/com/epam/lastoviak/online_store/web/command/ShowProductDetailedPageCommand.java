@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
 import static com.epam.lastoviak.online_store.web.Path.ERROR_PAGE;
 import static com.epam.lastoviak.online_store.web.Path.PRODUCT_DETAILED_PAGE;
 
-public class ProductDetailedPageCommand extends Command {
+public class ShowProductDetailedPageCommand extends Command {
     private static final Logger log = Logger.getLogger(LoginCommand.class);
 
     @Override

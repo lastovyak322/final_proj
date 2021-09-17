@@ -10,11 +10,14 @@
 <html>
 <head>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
         <jsp:useBean id="product" class="com.epam.lastoviak.online_store.db.dto.Product"/>
         <jsp:useBean id="productList" scope="request" type="java.util.List"/>
     <title>Title</title>
 </head>
 <body>
+<p><a href="main_page.jsp">Main Page</a></p>
+
 <br>
 
 <c:forEach var="product"  items="${productList}">
