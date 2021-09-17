@@ -19,6 +19,11 @@ public class CommandContainer {
         commands.put("addToCart",new AddToCartCommand());
         commands.put("decreaseAmount",new DecreaseAmountInCartCommand ());
         commands.put("deleteProduct",new DeleteProductFromCartCommand ());
+        commands.put("findAccount",new FindAccountByIdCommand ());
+        commands.put("changeAccountStatus",new ChangeAccountStatusCommand ());
+        commands.put("registerBuy",new RegisterBuyCommand ());
+        commands.put("getAllAccountOrders",new GetAllAccountOrderCommand ());
+        commands.put("accountOrderDetailedPage",new ShowAccountOrderDetailsCommand ());
     }
 
     public static Command getCommand(String commandName){

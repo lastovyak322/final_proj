@@ -18,8 +18,10 @@
 Product cart
 <c:choose>
     <c:when test="${sessionScope.cart!=null}">
+        <c:set var="totalPrice" value="${0}"/>
         <jsp:useBean id="cart" scope="session" type="java.util.Map"/>
         <c:forEach var="entry" items="${cart}">
+            <c:set var="totalPrice" value="${totalPrice + entry.key.price*entry.value}"/>
             <p>Product: ${entry.key.name}</p>
             <p>
                 Amount:
@@ -35,6 +37,11 @@ Product cart
                 <c:set var="blockBuy" value="${true}" scope="request"/>
             </c:if>
         </c:forEach>
+        <br>
+        <br>
+        Total price
+        ${totalPrice}
+        <a href="/hello?command=registerBuy">Buy</a>
     </c:when>
     <c:otherwise>
         is empty

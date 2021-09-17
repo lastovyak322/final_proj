@@ -1,29 +1,29 @@
 package com.epam.lastoviak.online_store.db.dto;
 
-public class Order {
+public class AccountOrder {
 
-  private long id;
-  private long accountId;
+  private int id;
+  private int accountId;
   private java.sql.Timestamp createTime;
   private java.sql.Timestamp lastUpdate;
-  private long orderStatusId;
-  private long approvedBy;
+  private int statusId;
+  private int approvedBy;
 
 
-  public long getId() {
+  public int getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(int id) {
     this.id = id;
   }
 
 
-  public long getAccountId() {
+  public int getAccountId() {
     return accountId;
   }
 
-  public void setAccountId(long accountId) {
+  public void setAccountId(int accountId) {
     this.accountId = accountId;
   }
 
@@ -46,20 +46,20 @@ public class Order {
   }
 
 
-  public long getOrderStatusId() {
-    return orderStatusId;
+  public int getStatusId() {
+    return statusId;
   }
 
-  public void setOrderStatusId(long orderStatusId) {
-    this.orderStatusId = orderStatusId;
+  public void setStatusId(int statusId) {
+    this.statusId = statusId;
   }
 
 
-  public long getApprovedBy() {
+  public int getApprovedBy() {
     return approvedBy;
   }
 
-  public void setApprovedBy(long approvedBy) {
+  public void setApprovedBy(int approvedBy) {
     this.approvedBy = approvedBy;
   }
 

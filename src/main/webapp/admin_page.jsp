@@ -12,10 +12,9 @@
 </head>
 <body>
 Admin page
-<form action="/hello" method="get">
-    <input type="hidden" name="command" value="logout">
-    <button type="submit">Logout</button>
-
-</form>
+<p><a href="main_page.jsp">Main Page</a></p>
+<p><a href="/hello?command=logout" >Logout</a></p>
+<p><a href="change_user_status_page.jsp" >Block/Unblock User</a></p>
+<p><a href="/hello?command=getAllAccountOrders" >Show Orders</a></p>
 </body>
 </html>
