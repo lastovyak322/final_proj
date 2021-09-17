@@ -3,4 +3,42 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
+
+<!--    <servlet>-->
+<!--        <servlet-name>Controller</servlet-name>-->
+<!--        <servlet-class>com.epam.lastoviak.online_store.Controller</servlet-class>-->
+<!--    </servlet>-->
+
+<!--    <servlet-mapping>-->
+<!--        <servlet-name>Controller</servlet-name>-->
+<!--        <url-pattern>/hello</url-pattern>-->
+<!--    </servlet-mapping>-->
+
+
+<!--    <filter>-->
+<!--        <filter-name>AccessFilter</filter-name>-->
+<!--        <filter-class>com.epam.lastoviak.online_store.web.filter.CommandAccessFilter</filter-class>-->
+<!--        <init-param>-->
+<!--            <param-name>admin</param-name>-->
+<!--            <param-value>listOrders</param-value>-->
+<!--        </init-param>-->
+<!--        <init-param>-->
+<!--            <param-name>client</param-name>-->
+<!--            <param-value>listMenu</param-value>-->
+<!--        </init-param>-->
+<!--        <init-param>-->
+<!--            <param-name>common</param-name>-->
+<!--            <param-value>logout noCommand viewSettings updateSettings</param-value>-->
+<!--        </init-param>-->
+<!--        <init-param>-->
+<!--            <param-name>out-of-control</param-name>-->
+<!--            <param-value>login</param-value>-->
+<!--        </init-param>-->
+<!--    </filter>-->
+
+<!--    <filter-mapping>-->
+<!--        <filter-name>AccessFilter</filter-name>-->
+<!--        <servlet-name>Controller</servlet-name>-->
+<!--    </filter-mapping>-->
+
 </web-app>

@@ -30,7 +30,7 @@
 
 <%--For displaying Previous link except for the 1st page --%>
 <c:if test="${requestScope.currentPage != 1}">
-    <a href="/hello?page=${requestScope.currentPage - 1}">Previous</a>
+    <a href="/hello?page=${requestScope.currentPage - 1}&command=showProductsByCategory">Previous</a>
 </c:if>
 
 <%--For displaying Page numbers.
@@ -63,11 +63,11 @@ Filter
     <br>
     <label>
         <input type="checkbox" name="manufacturer" value="1">
-    </label> Samsung
+    </label> 1
     <br>
     <label>
         <input type="checkbox" name="manufacturer" value="2">
-    </label> Xiaomi
+    </label> 2
 
     <%--<input type="checkbox" name="selectType" value="manufacturer" > Manufacturer--%>
     <br>

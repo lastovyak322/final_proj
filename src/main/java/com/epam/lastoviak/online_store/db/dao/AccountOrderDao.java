@@ -16,15 +16,15 @@ import static com.epam.lastoviak.online_store.db.Fields.*;
 
 public class AccountOrderDao {
     private static final String SQL_ADD_NEW_ORDER =
-            "INSERT INTO account_order (account_id) " +
-            "VALUES(?) ";
+            "INSERT INTO account_order (account_id) VALUES(?) ";
     private static final String SQL_GET_ALL_ACCOUNT_ORDERS_WITH_LIMIT=
             "SELECT * FROM account_order LIMIT ?,?";
     private static final String SQL_GET_ACCOUNT_ORDERS_BY_ACCOUNT_ID=
             "SELECT * FROM account_order WHERE account_id=? LIMIT ?,?";
-
     private static final String SQL_GET_COUNT_OF_ALL_ACCOUNT_ORDERS=
             "SELECT COUNT(*) FROM account_order";
+    private static final String SQL_CHANGE_ACCOUNT_ORDER_STATUS =
+            "UPDATE account_order  SET status_id = ? WHERE id = ?";
 
 
     DBManager dbManager = DBManager.getInstance();
@@ -163,10 +163,10 @@ public class AccountOrderDao {
         try {
             connection = dbManager.getConnection();
             if (connection != null) {
-                updatedProductList = new ProductDAO().selectForRegister(connection, entryCart);
 
                 int orderId = addNewOrder(accountId, connection);
                 System.out.println("orderId" + orderId);
+
                 if (orderId == 0) {
                     connection.rollback();
                     return false;
@@ -179,6 +179,9 @@ public class AccountOrderDao {
                     connection.rollback();
                     return false;
                 }
+
+                updatedProductList = new ProductDAO().selectForRegister(connection, entryCart);
+
                 boolean isAmountDecreased = new ProductDAO().decreaseAmountUponPurchase(connection, updatedProductList, cart);
                 System.out.println("isAmountDecreased"+isAmountDecreased);
 
@@ -197,6 +200,32 @@ public class AccountOrderDao {
             dbManager.closeConnection(connection);
         }
 
+        return ans;
+    }
+    public boolean changeAccountOrderStatusById(int id, int statusId) {
+        boolean  ans=false;
+        Connection connection = null;
+        PreparedStatement pstm = null;
+        try {
+            connection = dbManager.getConnection();
+            if(connection!=null) {
+                pstm = connection.prepareStatement(SQL_CHANGE_ACCOUNT_ORDER_STATUS);
+                pstm.setInt(1, statusId);
+                pstm.setInt(2, id);
+                if(pstm.executeUpdate()>0){
+                    ans=true;
+                }
+                dbManager.commit(connection);
+            }
+        } catch (SQLException throwables) {
+            //log
+            dbManager.rollback(connection);
+            ans=false;
+            throwables.printStackTrace();
+        }finally {
+            dbManager.closePreparedStatement(pstm);
+            dbManager.closeConnection(connection);
+        }
         return ans;
     }
 

@@ -13,9 +13,9 @@ import java.sql.SQLException;
 
 public class ProductSpecificationDao {
     private static final String SQL_ADD_NEW_PRODUCT_SPECIFICATION =
-            "INSERT INTO product_specification (product_id,max_speed, max_load, power_reserve, manufacturer) VALUES (?,?,?,?,?)";
+            "INSERT INTO product_specifications (product_id,max_speed, max_load, power_reserve, manufacturer) VALUES (?,?,?,?,?)";
     private static final String SQL_FIND_PRODUCT_SPECIFICATION_BY_ID =
-            "SELECT * FROM product_specification WHERE product_id =?";
+            "SELECT * FROM product_specifications WHERE product_id =?";
     DBManager dbManager = DBManager.getInstance();
 
     private boolean addProductSpecification(ProductSpecification productSpecification) {

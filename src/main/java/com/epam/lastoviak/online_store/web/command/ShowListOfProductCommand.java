@@ -137,9 +137,9 @@ public class ShowListOfProductCommand extends Command {
             String maxPrice = (String) session.getAttribute("maxPrice");
             System.out.println(maxPrice);
             if (!maxPrice.isEmpty()) {
-                sb.append("AND price<").append(Integer.parseInt((String) session.getAttribute("maxPrice")));
+                sb.append(" AND price<").append(Integer.parseInt((String) session.getAttribute("maxPrice")));
             }
-            sb.append("AND category_id=").append(categoryId).append(" ");
+            sb.append(" AND category_id=").append(categoryId).append(" ");
             String orderBy = (String) session.getAttribute("orderBy");
             System.out.println(orderBy);
             if (!"null".equals(orderBy)) {

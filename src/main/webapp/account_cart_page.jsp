@@ -18,6 +18,7 @@
 Product cart
 <c:choose>
     <c:when test="${sessionScope.cart!=null}">
+        <c:set var="blockBuy" value="${true}" scope="request"/>
         <c:set var="totalPrice" value="${0}"/>
         <jsp:useBean id="cart" scope="session" type="java.util.Map"/>
         <c:forEach var="entry" items="${cart}">
@@ -35,13 +36,22 @@ Product cart
             <c:if test="${entry.key.amount<entry.value }">
                 Not so much in stock
                 <c:set var="blockBuy" value="${true}" scope="request"/>
+                <c:set var="blockBuy" value="${true}" scope="page"/>
             </c:if>
         </c:forEach>
         <br>
         <br>
         Total price
         ${totalPrice}
-        <a href="/hello?command=registerBuy">Buy</a>
+
+        <c:choose>
+            <c:when test="${sessionScope.account==null}">Only register user can buy </c:when>
+            <c:when test="${pageScope.blockBuy!=null}"> Cant buy</c:when>
+            <c:otherwise>
+                <a href="/hello?command=registerBuy">Buy</a>
+            </c:otherwise>
+        </c:choose>
+
     </c:when>
     <c:otherwise>
         is empty
