@@ -14,8 +14,8 @@
 <br>
 <c:choose>
     <c:when test="${sessionScope.account==null}"> <a href="login_page.jsp"> Login></a></c:when>
-    <c:when test="${sessionScope.account.roleId==2}"><a href="admin_page.jsp"> AdminMenu</a> </c:when>
-    <c:when test="${sessionScope.account.roleId==1}"><a href="account_settings_page.jsp"> UserMenu</a></c:when>
+    <c:when test="${sessionScope.account.roleId==2}"><a href="admin/admin_page.jsp"> AdminMenu</a> </c:when>
+    <c:when test="${sessionScope.account.roleId==1}"><a href="common_user_and_admin/account_settings_page.jsp"> UserMenu</a></c:when>
 </c:choose>
 <p><a href="account_cart_page.jsp">Cart</a> </p>
 <br>

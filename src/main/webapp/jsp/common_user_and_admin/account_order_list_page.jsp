@@ -14,7 +14,7 @@
     <jsp:useBean id="accountOrder" class="com.epam.lastoviak.online_store.db.dto.AccountOrder"/>
 </head>
 <body>
-<p><a href="main_page.jsp">Main Page</a></p>
+<p><a href="../main_page.jsp">Main Page</a></p>
 
 <c:forEach var="accountOrder" items="${accountOrderList}">
     Order id:${accountOrder.id}

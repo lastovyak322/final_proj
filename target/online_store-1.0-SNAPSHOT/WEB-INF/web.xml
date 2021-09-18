@@ -4,41 +4,51 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
 
-<!--    <servlet>-->
-<!--        <servlet-name>Controller</servlet-name>-->
-<!--        <servlet-class>com.epam.lastoviak.online_store.Controller</servlet-class>-->
-<!--    </servlet>-->
+    <servlet>
+        <servlet-name>Controller</servlet-name>
+        <servlet-class>com.epam.lastoviak.online_store.Controller</servlet-class>
+    </servlet>
 
-<!--    <servlet-mapping>-->
-<!--        <servlet-name>Controller</servlet-name>-->
-<!--        <url-pattern>/hello</url-pattern>-->
-<!--    </servlet-mapping>-->
+    <servlet-mapping>
+        <servlet-name>Controller</servlet-name>
+        <url-pattern>/hello</url-pattern>
+    </servlet-mapping>
 
 
-<!--    <filter>-->
-<!--        <filter-name>AccessFilter</filter-name>-->
-<!--        <filter-class>com.epam.lastoviak.online_store.web.filter.CommandAccessFilter</filter-class>-->
-<!--        <init-param>-->
-<!--            <param-name>admin</param-name>-->
-<!--            <param-value>listOrders</param-value>-->
-<!--        </init-param>-->
-<!--        <init-param>-->
-<!--            <param-name>client</param-name>-->
-<!--            <param-value>listMenu</param-value>-->
-<!--        </init-param>-->
-<!--        <init-param>-->
-<!--            <param-name>common</param-name>-->
-<!--            <param-value>logout noCommand viewSettings updateSettings</param-value>-->
-<!--        </init-param>-->
-<!--        <init-param>-->
-<!--            <param-name>out-of-control</param-name>-->
-<!--            <param-value>login</param-value>-->
-<!--        </init-param>-->
-<!--    </filter>-->
+    <filter>
+        <filter-name>CommandAccessFilter</filter-name>
+        <filter-class>com.epam.lastoviak.online_store.web.filter.CommandAccessFilter</filter-class>
+        <init-param>
+            <param-name>admin</param-name>
+            <param-value>findAccount changeAccountStatus getAllAccountOrders accountOrderDetailedPage</param-value>
+        </init-param>
+        <init-param>
+            <param-name>commonForRegisterUserAndAdmin</param-name>
+            <param-value>logout registerBuy</param-value>
+        </init-param>
+        <init-param>
+            <param-name>out-of-control</param-name>
+            <param-value>showProductsByCategory login productDetailedPage addToCart decreaseAmount deleteProduct
+                register
+            </param-value>
+        </init-param>
+    </filter>
 
-<!--    <filter-mapping>-->
-<!--        <filter-name>AccessFilter</filter-name>-->
-<!--        <servlet-name>Controller</servlet-name>-->
-<!--    </filter-mapping>-->
+    <filter-mapping>
+        <filter-name>CommandAccessFilter</filter-name>
+        <servlet-name>Controller</servlet-name>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>AdminAccessFilter</filter-name>
+        <filter-class>com.epam.lastoviak.online_store.web.filter.AdminAccesFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+
+        <filter-name>AdminAccessFilter</filter-name>
+        <url-pattern>/jsp/admin/*</url-pattern>
+
+    </filter-mapping>
 
 </web-app>

@@ -57,14 +57,14 @@ public class LoginCommand extends Command {
             return path;
 
         } else {
-            int role_id = account.getRoleId();
-            log.trace("Got role_id >>> " + role_id);
+            int roleId = account.getRoleId();
+            log.trace("Got roleId >>> " + roleId);
             path=MAIN_PAGE;
 
             session.setAttribute("account", account);
             //log
             System.out.println(account);
-            session.setAttribute("role_id", role_id);
+            session.setAttribute("roleId", roleId);
             //log
             System.out.println(account);
 

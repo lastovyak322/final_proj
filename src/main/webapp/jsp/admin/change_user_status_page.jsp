@@ -12,7 +12,7 @@
     <title>Title</title>
 </head>
 <body>
-<p><a href="main_page.jsp">Main Page</a></p>
+<p><a href="../main_page.jsp">Main Page</a></p>
 
 <form action="/hello">
     <input type="hidden" name="command" value="findAccount"/>
