@@ -1,4 +1,3 @@
-
 <%--
   Created by IntelliJ IDEA.
   User: synteztech
@@ -11,8 +10,8 @@
 <head>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-        <jsp:useBean id="product" class="com.epam.lastoviak.online_store.db.dto.Product"/>
-        <jsp:useBean id="productList" scope="request" type="java.util.List"/>
+    <jsp:useBean id="product" class="com.epam.lastoviak.online_store.db.dto.Product"/>
+    <jsp:useBean id="productList" scope="request" type="java.util.List"/>
     <title>Title</title>
 </head>
 <body>
@@ -20,7 +19,7 @@
 
 <br>
 
-<c:forEach var="product"  items="${productList}">
+<c:forEach var="product" items="${productList}">
     <p>${product.name}</p>
     <p>${product.price}</p>
     <p><a href="/hello?command=productDetailedPage&productId=${product.id}">Details </a></p>
@@ -43,7 +42,9 @@ The when condition does not display a link for the current page--%>
                     <td>${i}</td>
                 </c:when>
                 <c:otherwise>
-                    <td><a href="/hello?page=${i}&command=showProductsByCategory">${i}</a></td>
+                    <td>
+                        <a href="/hello?page=${i}&command=showProductsByCategory&${requestScope.manufacturer}&maxPrice=${requestScope.maxPrice}&minPrice=${requestScope.minPrice}&orderBy=${requestScope.orderBy}&filter=${requestScope.filter}&categoryId=${requestScope.categoryId}">${i}</a>
+                    </td>
                 </c:otherwise>
             </c:choose>
         </c:forEach>
@@ -52,11 +53,12 @@ The when condition does not display a link for the current page--%>
 <br>
 Filter
 <form action="/hello">
-    <input type="hidden" name="filter" value="ON" />
-    <input type="hidden" name="command" value="showProductsByCategory" />
+    <input type="hidden" name="filter" value="doFilter"/>
+    <input type="hidden" name="command" value="showProductsByCategory"/>
+    <input type="hidden" name="categoryId" value="${requestScope.categoryId}"/>
 
     <input type="text" name="minPrice"> Min Price
-<br>
+    <br>
     <input type="text" name="maxPrice"> Max price
     <br>
     Manufacturer
@@ -69,11 +71,10 @@ Filter
         <input type="checkbox" name="manufacturer" value="2">
     </label> 2
 
-    <%--<input type="checkbox" name="selectType" value="manufacturer" > Manufacturer--%>
     <br>
     Sort by
     <br>
-    <select name="orderBy" >
+    <select name="orderBy">
         <option selected value="def">default</option>
         <option value="cheap">cheap->exp</option>
         <option value="expensive">exp->cheap</option>
@@ -83,13 +84,10 @@ Filter
         <option value="new">old->new</option>
     </select>
 
-
     <br>
-    <input type="submit"  value="Search">
-    <a href="/hello?command=showProductsByCategory&filter=OFF">Reset</a>
+    <input type="submit" value="Search">
+    <a href="/hello?command=showProductsByCategory&filter=resetFilter&categoryId=${requestScope.categoryId}">Reset</a>
 </form>
-
-
 
 
 </body>

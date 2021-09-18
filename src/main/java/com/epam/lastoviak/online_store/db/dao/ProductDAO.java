@@ -192,7 +192,7 @@ public class ProductDAO {
 
     }
 
-    public List<Product> getProductsByGeneratedSql(String sqlQuery) {
+    public List<Product> getProductsByGeneratedSql(String sqlQuery, int limit,int recordsPerPage) {
         List<Product> productList = new ArrayList<>();
         Product product = null;
         Connection connection = null;
@@ -200,7 +200,13 @@ public class ProductDAO {
         ResultSet rs = null;
         ProductFiller productFiller = new ProductFiller();
         StringBuilder generatedQuery = new StringBuilder(SQL_FIND_QUERY_START);
-        generatedQuery.append(" ").append(sqlQuery);
+        generatedQuery
+                .append(" ")
+                .append(sqlQuery)
+                .append("LIMIT ")
+                .append(limit)
+                .append(", ")
+                .append(recordsPerPage);
         System.out.println(generatedQuery);
 
         try {

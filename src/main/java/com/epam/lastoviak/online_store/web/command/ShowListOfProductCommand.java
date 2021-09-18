@@ -26,54 +26,44 @@ public class ShowListOfProductCommand extends Command {
         ProductDAO productDAO = new ProductDAO();
         String path = PRODUCT_LIST_PAGE;
 
-
         //log
-        HttpSession httpSession = request.getSession();
-        //log
-        String categoryId = request.getParameter("categoryId");
-        System.out.println(categoryId);
-        if (categoryId != null) {
-            httpSession.setAttribute("categoryId", categoryId);
-        } else {
-            categoryId = (String) httpSession.getAttribute("categoryId");
-        }
-        System.out.println(categoryId);
-        //log
+        String categoryId=request.getParameter("categoryId");
+        request.setAttribute("categoryId",categoryId );
 
-        int page = 1;
-        int recordsPerPage = 2;
-        int numbOfRecords = 0;
-
-        if (request.getParameter("page") != null) {
-            page = Integer.parseInt(request.getParameter("page"));
-        }
-        int limit = (page - 1) * recordsPerPage;
-        List<Product> productList = null;
 
         if (request.getParameter("filter") != null) {
             switch (request.getParameter("filter")) {
-                case "ON":
-                    httpSession.setAttribute("filter", "ON");
-                    setFilterToSession(request);
+                case "doFilter":
+                    request.setAttribute("filter", "doFilter");
+                    setFilterToRequest(request);
                     break;
-                case "OFF":
-                    httpSession.removeAttribute("filter");
-                    removeFilterFromSession(request);
+                case "resetFilter":
+                    request.removeAttribute("filter");
+                    removeFilterFromRequest(request);
                     break;
             }
 
         }
-        if (httpSession.getAttribute("filter") != null) {
-            StringBuilder generatedQuery = new FilteredProductsSqlGenerator().generateSqlQuery(request);
+
+        int page = 1;
+        int recordsPerPage = 2;
+        int numbOfRecords;
+        if (request.getParameter("page") != null) {
+            page = Integer.parseInt(request.getParameter("page"));
+        }
+        int limit = (page - 1) * recordsPerPage;
+        List<Product> productList ;
+
+
+        if (request.getAttribute("filter") != null) {
+            String generatedQuery = new FilteredProductsSqlGenerator().generateSqlQuery(request,limit,recordsPerPage);
             System.out.println(generatedQuery);
-            numbOfRecords = productDAO.getNumberOfFilteredRecords(generatedQuery.toString());
+            numbOfRecords = productDAO.getNumberOfFilteredRecords(generatedQuery);
             System.out.println(numbOfRecords);
-            productList = productDAO.getProductsByGeneratedSql(generatedQuery
-                    .append("LIMIT ").append(limit).append(", ").append(recordsPerPage).toString());
+            productList = productDAO.getProductsByGeneratedSql(generatedQuery,limit,recordsPerPage);
             System.out.println(productList);
         } else {
             numbOfRecords = productDAO.getNumberOfRecords(Integer.parseInt(categoryId));
-            System.out.println(numbOfRecords);
             productList = productDAO.getProductsByCategoryIdWithLimit(Integer.parseInt(categoryId), limit, recordsPerPage);
 
         }
@@ -81,34 +71,28 @@ public class ShowListOfProductCommand extends Command {
 
         System.out.println(productList.toString());
         //log
-//request.getRequestURI()
 
-        //log
 
         request.setAttribute("productList", productList);
         request.setAttribute("numbOfPages", numbOfPages);
         request.setAttribute("currentPage", page);
         //log
 
-//request.getA
         return path;
     }
 
-    private void setFilterToSession(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        System.out.println(Arrays.toString(request.getParameterValues("manufacturer"))+"aa");
-        session.setAttribute("manufacturer", request.getParameterValues("manufacturer"));
-        session.setAttribute("maxPrice", request.getParameter("maxPrice"));
-        session.setAttribute("minPrice", request.getParameter("minPrice"));
-        session.setAttribute("orderBy", request.getParameter("orderBy"));
+    private void setFilterToRequest(HttpServletRequest request) {
+        request.setAttribute("manufacturer", request.getParameterValues("manufacturer"));
+        request.setAttribute("maxPrice", request.getParameter("maxPrice"));
+        request.setAttribute("minPrice", request.getParameter("minPrice"));
+        request.setAttribute("orderBy", request.getParameter("orderBy"));
     }
 
-    private void removeFilterFromSession(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        session.removeAttribute("manufacturer");
-        session.removeAttribute("maxPrice");
-        session.removeAttribute("minPrice");
-        session.removeAttribute("orderBy");
+    private void removeFilterFromRequest(HttpServletRequest request) {
+        request.removeAttribute("manufacturer");
+        request.removeAttribute("maxPrice");
+        request.removeAttribute("minPrice");
+        request.removeAttribute("orderBy");
 
     }
 
@@ -116,35 +100,45 @@ public class ShowListOfProductCommand extends Command {
     private static class FilteredProductsSqlGenerator {
 
 
-        public StringBuilder generateSqlQuery(HttpServletRequest request) {
+        public String generateSqlQuery(HttpServletRequest request,int limit,int recordsPerPage) {
             System.out.println("start");
             HttpSession session = request.getSession();
             StringBuilder sb = new StringBuilder();
-            int categoryId = Integer.parseInt((String) session.getAttribute("categoryId"));
-            String[] manufacturer=(String[]) session.getAttribute("manufacturer");
-           // System.out.println(manufacturer[0]);
-            System.out.println(manufacturer!=null);
-            if (manufacturer!=null) {
-                sb.append(Arrays.stream(manufacturer).map(x->String.valueOf(Integer.parseInt(x))).
-                                collect(Collectors.joining(",","manufacturer IN(",") ")));
+            int categoryId = Integer.parseInt((String) request.getAttribute("categoryId"));
+            String[] manufacturer = (String[]) request.getAttribute("manufacturer");
+
+
+
+            // System.out.println(manufacturer[0]);
+            System.out.println(manufacturer != null);
+            if (manufacturer != null) {
+                String generatedManufacturerParr = Arrays.stream(request.getParameterValues("manufacturer")).
+                        collect(Collectors.joining("&manufacturer=", "manufacturer=", ""));
+                request.setAttribute("manufacturer", generatedManufacturerParr);
+
+                sb.append(Arrays.stream(manufacturer).map(x -> String.valueOf(Integer.parseInt(x))).
+                        collect(Collectors.joining(",", "manufacturer IN(", ")")));
 
             }
-            String minPrice = (String) session.getAttribute("minPrice");
+            String minPrice = (String) request.getAttribute("minPrice");
             System.out.println(minPrice.isEmpty());
             if (!minPrice.isEmpty()) {
-                sb.append("AND price>").append(Integer.parseInt((String) session.getAttribute("minPrice")));
+                sb.append(" AND price>").append(Integer.parseInt((String) request.getAttribute("minPrice")));
             }
-            String maxPrice = (String) session.getAttribute("maxPrice");
+
+            String maxPrice = (String) request.getAttribute("maxPrice");
             System.out.println(maxPrice);
             if (!maxPrice.isEmpty()) {
-                sb.append(" AND price<").append(Integer.parseInt((String) session.getAttribute("maxPrice")));
+                sb.append(" AND price<").append(Integer.parseInt((String) request.getAttribute("maxPrice")));
             }
+
             sb.append(" AND category_id=").append(categoryId).append(" ");
-            String orderBy = (String) session.getAttribute("orderBy");
+
+            String orderBy = (String) request.getAttribute("orderBy");
             System.out.println(orderBy);
             if (!"null".equals(orderBy)) {
                 sb.append("ORDER BY ");
-                switch ((String) session.getAttribute("orderBy")) {
+                switch ((String) request.getAttribute("orderBy")) {
                     case "cheap":
                         sb.append("price ");
                         break;
@@ -158,7 +152,7 @@ public class ShowListOfProductCommand extends Command {
                         sb.append("last_update DESC ");
                         break;
                     case "name":
-                        sb.append("name");
+                        sb.append("name ");
                         break;
                     case "nameReverse":
                         sb.append("name DESC ");
@@ -168,8 +162,7 @@ public class ShowListOfProductCommand extends Command {
                         break;
                 }
             }
-
-            return sb;
+            return sb.toString();
         }
     }
 }
