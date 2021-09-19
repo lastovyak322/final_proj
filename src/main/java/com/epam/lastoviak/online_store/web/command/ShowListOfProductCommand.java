@@ -117,7 +117,7 @@ public class ShowListOfProductCommand extends Command {
                 request.setAttribute("manufacturer", generatedManufacturerParr);
 
                 sb.append(Arrays.stream(manufacturer).map(x -> String.valueOf(Integer.parseInt(x))).
-                        collect(Collectors.joining(",", "manufacturer IN(", ")")));
+                        collect(Collectors.joining(",", "manufacturer_id IN(", ")")));
 
             }
             String minPrice = (String) request.getAttribute("minPrice");

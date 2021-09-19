@@ -2,10 +2,10 @@ package com.epam.lastoviak.online_store.web.command;
 
 import com.epam.lastoviak.online_store.db.dao.ProductDAO;
 import com.epam.lastoviak.online_store.db.dao.ProductDescriptionLanguageDao;
-import com.epam.lastoviak.online_store.db.dao.ProductSpecificationDao;
+import com.epam.lastoviak.online_store.db.dao.ProductDetailedPageDao;
 import com.epam.lastoviak.online_store.db.dto.Product;
 import com.epam.lastoviak.online_store.db.dto.ProductDescription;
-import com.epam.lastoviak.online_store.db.dto.ProductSpecification;
+import com.epam.lastoviak.online_store.db.dto.ProductDetailedPage;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,15 +29,10 @@ public class ShowProductDetailedPageCommand extends Command {
         int productId = Integer.parseInt(request.getParameter("productId"));
         System.out.println("productId>>" + productId);
 
-        Product product = new ProductDAO().getProductById(productId);
-        System.out.println(product);
 
-        ProductSpecification productSpecification = new ProductSpecificationDao().getProductSpecificationById(productId);
-        System.out.println(productSpecification);
-
-        ProductDescription productDescription = new ProductDescriptionLanguageDao().getProductById(productId, 1);
-        System.out.println(productDescription);
-        if (product == null) {
+        ProductDetailedPage pdp = new ProductDetailedPageDao().getPDPbyProductIdAndLanguageId(productId, 1);
+        System.out.println(pdp);
+        if (pdp == null) {
             errorMassage = "product does not exist";
             session.setAttribute("errorMessage", errorMassage);
             System.out.println(errorMassage);
@@ -45,11 +40,8 @@ public class ShowProductDetailedPageCommand extends Command {
 
         }
         forward = PRODUCT_DETAILED_PAGE;
-        System.out.println(productDescription.getDescription());
-        request.setAttribute("product", product);
-        request.setAttribute("productSpecification", productSpecification);
-        request.setAttribute("productDescription", productDescription);
 
+        request.setAttribute("pdp", pdp);
 
         return forward;
     }

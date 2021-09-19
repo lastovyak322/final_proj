@@ -68,8 +68,7 @@ public class CommandAccessFilter implements Filter {
             if (roleId == null)
                 return false;
         }
-        return accessMap.get(roleId).contains(commandName)
-                || commons.contains(commandName);
+        return commons.contains(commandName);
     }
 
 

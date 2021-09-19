@@ -12,6 +12,9 @@ public class Product {
     private int amount;
     private int categoryId;
     private java.sql.Timestamp lastUpdate;
+    private int maxSpeed;
+    private int maxLoad;
+    private int manufacturer;
 
 
     public int getId() {
@@ -67,16 +70,28 @@ public class Product {
         this.lastUpdate = lastUpdate;
     }
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", amount=" + amount +
-                ", categoryId=" + categoryId +
-                ", lastUpdate=" + lastUpdate +
-                '}';
+    public int getMaxSpeed() {
+        return maxSpeed;
+    }
+
+    public void setMaxSpeed(int maxSpeed) {
+        this.maxSpeed = maxSpeed;
+    }
+
+    public int getMaxLoad() {
+        return maxLoad;
+    }
+
+    public void setMaxLoad(int maxLoad) {
+        this.maxLoad = maxLoad;
+    }
+
+    public int getManufacturerId() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(int manufacturer) {
+        this.manufacturer = manufacturer;
     }
 
     @Override
@@ -84,12 +99,13 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return id == product.id && amount == product.amount && categoryId == product.categoryId && Objects.equals(name, product.name)
-                && Objects.equals(price, product.price) && Objects.equals(lastUpdate, product.lastUpdate);
+        return id == product.id && amount == product.amount && categoryId == product.categoryId && maxSpeed == product.maxSpeed && maxLoad == product.maxLoad && manufacturer == product.manufacturer && Objects.equals(name, product.name) && Objects.equals(price, product.price) && Objects.equals(lastUpdate, product.lastUpdate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, price, amount, categoryId, lastUpdate);
+        return Objects.hash(id, name, price, amount, categoryId, lastUpdate, maxSpeed, maxLoad, manufacturer);
     }
 }
+
+

@@ -2,6 +2,7 @@ package com.epam.lastoviak.online_store.db.dao;
 
 import com.epam.lastoviak.online_store.db.DBManager;
 import com.epam.lastoviak.online_store.db.DTOFiller;
+import com.epam.lastoviak.online_store.db.Fields;
 import com.epam.lastoviak.online_store.db.dto.Product;
 
 import java.math.BigDecimal;
@@ -25,27 +26,21 @@ public class ProductDAO {
     private static final String SQL_GET_NUMBER_OF_RECORDS_BY_CATEGORY_ID =
             "SELECT COUNT(*) FROM product WHERE category_id=?";
     private static final String SQL_ADD_NEW_PRODUCT =
-            "INSERT INTO product (name, price, amount, category_id) VALUES (?,?,?,?)";
+            "INSERT INTO product (name, price, amount, category_id, max_speed, max_load, manufacturer_id) " +
+                    "VALUES (?,?,?,?,?,?,?)";
     private static final String SQL_FIND_PRODUCT_BY_CATEGORY_ID =
             "SELECT * FROM product WHERE category_id=?";
     private static final String SQL_CHANGE_PRODUCT_PRICE =
             "UPDATE product  SET price = ? WHERE id = ?";
     private static final String SQL_GET_NUMBER_OF_FILTERED_RECORDS =
-            "SELECT COUNT(*) FROM product INNER JOIN product_specifications ps on product.id = ps.product_Id WHERE ";
-    private static final String SQL_FIND_QUERY_START = "SELECT id, name, price, amount, category_id, last_update " +
-            "FROM product INNER JOIN product_specifications ps on product.id = ps.product_Id WHERE ";
+            "SELECT COUNT(*) FROM product WHERE ";
+    private static final String SQL_FIND_QUERY_START =
+            "SELECT * FROM product WHERE ";
     private static final String SQL_FIND_PRODUCT_BY_CATEGORY_ID_WITH_LIMIT =
             "SELECT * FROM product WHERE category_id=? LIMIT ?,?";
     private static final String SQL_GET_PRODUCT_AMOUNT_BY_PRODUCT_ID =
             "SELECT amount FROM product WHERE id=? ";
 
-
-    private static final String DTO_ID = "id";
-    private static final String PRODUCT_NAME = "name";
-    private static final String PRODUCT_PRICE = "price";
-    private static final String PRODUCT_AMOUNT = "amount";
-    private static final String PRODUCT_CATEGORY_ID = "category_id";
-    private static final String PRODUCT_LAST_UPDATE = "last_update";
 
 
     private boolean addProduct(Product product) {
@@ -63,6 +58,9 @@ public class ProductDAO {
                 pstm.setBigDecimal(++m, product.getPrice());
                 pstm.setInt(++m, product.getAmount());
                 pstm.setInt(++m, product.getCategoryId());
+                pstm.setInt(++m, product.getMaxSpeed());
+                pstm.setInt(++m, product.getMaxLoad());
+                pstm.setInt(++m, product.getManufacturerId());
                 if (pstm.executeUpdate() > 0) {
                     ans = true;
                 }
@@ -408,8 +406,8 @@ public class ProductDAO {
         PreparedStatement pstm = null;
         ResultSet rs = null;
         try {
-            System.out.println("SELECT FROM product WHERE id IN"+sj.toString());
-            pstm = con.prepareStatement("SELECT * FROM product WHERE id IN"+sj.toString());
+            System.out.println("SELECT FROM product WHERE id IN"+sj);
+            pstm = con.prepareStatement("SELECT * FROM product WHERE id IN"+sj);
             rs = pstm.executeQuery();
             while (rs.next()) {
                 product = new ProductFiller().fill(rs);
@@ -434,13 +432,13 @@ public class ProductDAO {
 
             try {
                 Product product = new Product();
-                product.setId(rs.getInt(DTO_ID));
-                product.setName(rs.getString(PRODUCT_NAME));
-                product.setPrice(rs.getBigDecimal(PRODUCT_PRICE));
-                product.setAmount(rs.getInt(PRODUCT_AMOUNT));
-                product.setCategoryId(rs.getInt(PRODUCT_CATEGORY_ID));
-                product.setLastUpdate(rs.getTimestamp(PRODUCT_LAST_UPDATE));
-                //product.setLastUpdate(rs.getTimestamp(PRODUCT_LAST_UPDATE));
+                product.setId(rs.getInt(Fields.ID));
+                product.setName(rs.getString(Fields.PRODUCT_NAME));
+                product.setPrice(rs.getBigDecimal(Fields.PRODUCT_PRICE));
+                product.setAmount(rs.getInt(Fields.PRODUCT_AMOUNT));
+                product.setCategoryId(rs.getInt(Fields.PRODUCT_CATEGORY_ID));
+                product.setLastUpdate(rs.getTimestamp(Fields.PRODUCT_LAST_UPDATE));
+
                 return product;
             } catch (SQLException throwables) {
                 throwables.printStackTrace();

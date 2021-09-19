@@ -11,24 +11,22 @@
 <head>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-    <jsp:useBean id="productDescription" scope="request" class="com.epam.lastoviak.online_store.db.dto.ProductDescription"/>
-    <jsp:useBean id="productSpecification" scope="request" class="com.epam.lastoviak.online_store.db.dto.ProductSpecification"/>
-    <jsp:useBean id="product" scope="request" class="com.epam.lastoviak.online_store.db.dto.Product"/>
+    <jsp:useBean id="pdp" scope="request" class="com.epam.lastoviak.online_store.db.dto.ProductDetailedPage"/>
+
     <title>Title</title>
 </head>
 <body>
-<p>${product.name}</p>
-<p>Max Speed: ${productSpecification.maxSpeed}</p>
-<p>Max Load: ${productSpecification.maxLoad}</p>
-<p>Power Reserve: ${productSpecification.powerReserve}</p>
-<p>Manufacturer: ${productSpecification.manufacturer}</p>
+<p>${pdp.name}</p>
+<p>Max Speed: ${pdp.maxSpeed}</p>
+<p>Max Load: ${pdp.maxLoad}</p>
+<p>Manufacturer: ${pdp.manufacturer}</p>
 
 <p>Description:</p>
     <br>
-    ${productDescription.description}
+    ${pdp.description}
 <br>
 <br>
-Price: ${product.price} <a href="/hello?command=addToCart&productId=${product.id}">Buy</a>
+Price: ${pdp.price} <a href="/hello?command=addToCart&productId=${pdp.id}">Buy</a>
 
 </body>
 </html>
