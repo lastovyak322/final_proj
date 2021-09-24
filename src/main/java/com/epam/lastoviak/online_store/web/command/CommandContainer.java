@@ -22,8 +22,10 @@ public class CommandContainer {
         commands.put("findAccount",new FindAccountByIdCommand ());
         commands.put("changeAccountStatus",new ChangeAccountStatusCommand ());
         commands.put("registerBuy",new RegisterBuyCommand ());
-        commands.put("getAllAccountOrders",new GetAllAccountOrderCommand ());
+        commands.put("getAllAccountOrders",new GetAllAccountOrdersCommand());
         commands.put("accountOrderDetailedPage",new ShowAccountOrderDetailsCommand ());
+        commands.put("getAccountOrdersByAccountId",new GetAccountOrdersByAccountIdCommand ());
+        commands.put("showCart",new ShowCartCommand ());
     }
 
     public static Command getCommand(String commandName){

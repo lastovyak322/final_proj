@@ -23,6 +23,8 @@ public class AccountOrderDao {
             "SELECT * FROM account_order WHERE account_id=? LIMIT ?,?";
     private static final String SQL_GET_COUNT_OF_ALL_ACCOUNT_ORDERS=
             "SELECT COUNT(*) FROM account_order";
+    private static final String SQL_GET_COUNT_OF_ACCOUNT_ORDERS_BY_ACCOUNT_ID=
+            "SELECT COUNT(*) FROM account_order WHERE account_id=?";
     private static final String SQL_CHANGE_ACCOUNT_ORDER_STATUS =
             "UPDATE account_order  SET status_id = ? WHERE id = ?";
 
@@ -63,6 +65,37 @@ public class AccountOrderDao {
             connection = dbManager.getConnection();
             if (connection != null) {
                 pstm = connection.prepareStatement(SQL_GET_COUNT_OF_ALL_ACCOUNT_ORDERS);
+                rs = pstm.executeQuery();
+                while (rs.next()) {
+                    ans = rs.getInt(1);
+                }
+                dbManager.commit(connection);
+            }
+
+
+        } catch (SQLException throwables) {
+            //log
+            dbManager.rollback(connection);
+            throwables.printStackTrace();
+        } finally {
+            dbManager.closeResultSet(rs);
+            dbManager.closePreparedStatement(pstm);
+            dbManager.closeConnection(connection);
+        }
+        return ans;
+    }
+
+    public int getNumberOfAccountOrdersByAccountId(int accountId) {
+
+        Connection connection = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        int ans = 0;
+        try {
+            connection = dbManager.getConnection();
+            if (connection != null) {
+                pstm = connection.prepareStatement(SQL_GET_COUNT_OF_ACCOUNT_ORDERS_BY_ACCOUNT_ID);
+                pstm.setInt(1,accountId);
                 rs = pstm.executeQuery();
                 while (rs.next()) {
                     ans = rs.getInt(1);
@@ -180,7 +213,7 @@ public class AccountOrderDao {
                     return false;
                 }
 
-                updatedProductList = new ProductDAO().selectForRegister(connection, entryCart);
+                updatedProductList = new ProductDAO().getUpdatedProductListFromCart(entryCart);
 
                 boolean isAmountDecreased = new ProductDAO().decreaseAmountUponPurchase(connection, updatedProductList, cart);
                 System.out.println("isAmountDecreased"+isAmountDecreased);

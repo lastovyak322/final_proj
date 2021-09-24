@@ -108,16 +108,15 @@ public class ShowListOfProductCommand extends Command {
             String[] manufacturer = (String[]) request.getAttribute("manufacturer");
 
 
+            sb.append(" category_id=").append(categoryId).append(" ");
 
-            // System.out.println(manufacturer[0]);
-            System.out.println(manufacturer != null);
             if (manufacturer != null) {
                 String generatedManufacturerParr = Arrays.stream(request.getParameterValues("manufacturer")).
                         collect(Collectors.joining("&manufacturer=", "manufacturer=", ""));
                 request.setAttribute("manufacturer", generatedManufacturerParr);
 
                 sb.append(Arrays.stream(manufacturer).map(x -> String.valueOf(Integer.parseInt(x))).
-                        collect(Collectors.joining(",", "manufacturer_id IN(", ")")));
+                        collect(Collectors.joining(",", "AND manufacturer_id IN(", ")")));
 
             }
             String minPrice = (String) request.getAttribute("minPrice");
@@ -132,7 +131,6 @@ public class ShowListOfProductCommand extends Command {
                 sb.append(" AND price<").append(Integer.parseInt((String) request.getAttribute("maxPrice")));
             }
 
-            sb.append(" AND category_id=").append(categoryId).append(" ");
 
             String orderBy = (String) request.getAttribute("orderBy");
             System.out.println(orderBy);

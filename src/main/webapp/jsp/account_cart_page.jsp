@@ -1,12 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: synteztech
-  Date: 13.09.21
-  Time: 00:00
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+
 <html>
 <head>
     <title>Title</title>
@@ -14,8 +8,9 @@
 
 </head>
 <body>
-<p><a href="main_page.jsp">Main Page</a></p>
-Product cart
+<%@ include file="/jspf/header.jspf" %>
+<fmt:message key="header.jsp.cart" />
+
 <c:choose>
     <c:when test="${sessionScope.cart!=null}">
         <c:set var="blockBuy" value="${true}" scope="request"/>
@@ -48,7 +43,7 @@ Product cart
             <c:when test="${sessionScope.account==null}">Only register user can buy </c:when>
             <c:when test="${pageScope.blockBuy!=null}"> Cant buy</c:when>
             <c:otherwise>
-                <a href="/hello?command=registerBuy">Buy</a>
+                <a href="/hello?command=registerBuy"><fmt:message key="cart.jsp.buy" /></a>
             </c:otherwise>
         </c:choose>
 

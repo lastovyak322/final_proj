@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -11,7 +10,7 @@
 
 <c:forEach var="accountOrder" items="${accountOrderList}">
     Order id:${accountOrder.id}
-    Account id:${accountOrder.accountId}
+    <c:if test="${sessionScope.roleId==2}"> Account id:${accountOrder.accountId}</c:if>
     Status:${accountOrder.statusId}
     <p><a href="/hello?command=accountOrderDetailedPage&accountOrderId=${accountOrder.id}">Details</a></p>
     <br>
@@ -22,7 +21,7 @@
             ${i}
         </c:when>
         <c:otherwise>
-            <a href="/hello?page=${i}&command=getAllAccountOrders">${i}</a>
+            <a href="/hello?page=${i}&command=getAccountOrdersByAccountId">${i}</a>
         </c:otherwise>
     </c:choose>
 </c:forEach>

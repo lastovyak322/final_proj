@@ -1,0 +1,55 @@
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ include file="/jspf/taglib.jspf" %>
+
+<c:set var="language" value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}" scope="session" /><fmt:setLocale value="${language}"/>
+<fmt:setBundle basename="resources"/>
+<!DOCTYPE html>
+<html lang="${language}">
+<script>
+
+        function func(a) {
+            const oldUrl = location.href;
+            var newUrl;
+            if(oldUrl.includes('language')){
+                newUrl = oldUrl.replace(/(?<=language=).+/ig, a);
+            }else if(oldUrl.includes('?')){
+                newUrl=oldUrl+'&language='+a;
+            }else{
+                newUrl=oldUrl+'?language='+a;
+            }
+            window.location.replace(newUrl)
+        }
+
+</script>
+
+
+
+<%--Мова:${sessionScope.language}--%>
+
+<a id="ru" href="#" onclick="func('ru');">ru</a>
+<a id="ua" href="#" onclick="func('uk');">ua</a>
+<a id="en" href="#" onclick="func('en');">en</a>
+
+
+<a href="/jsp/main_page.jsp"><fmt:message key="header.jsp.main_page"/></a>
+<a href="/hello?command=showCart"><fmt:message key="header.jsp.cart"/></a>
+<c:choose>
+    <c:when test="${sessionScope.account==null}">
+        <a href="/jsp/login_page.jsp"><fmt:message key="header.jsp.login"/></a>
+        <a href="jsp/register_page.jsp"><fmt:message key="header.jsp.register"/></a>
+    </c:when>
+    <c:when test="${sessionScope.account.roleId==1}">
+        <a href="/jsp/common_user_and_admin/account_settings_page.jsp"> <fmt:message key="header.jsp.user_menu"/></a>
+        <a href="/hello?command=logout"> <fmt:message key="header.jsp.logout"/></a>
+    </c:when>
+    <c:otherwise>
+        <a href="/jsp/admin/admin_page.jsp"> <fmt:message key="header.jsp.admin_menu"/></a>
+        <a href="/jsp/common_user_and_admin/account_settings_page.jsp"><fmt:message key="header.jsp.user_menu"/></a>
+        <a href="/hello?command=logout"> <fmt:message key="header.jsp.logout"/></a>
+    </c:otherwise>
+</c:choose>
+
+
+<hr>
+
+</html>

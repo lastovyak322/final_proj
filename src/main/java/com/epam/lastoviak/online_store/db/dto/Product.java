@@ -99,12 +99,12 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return id == product.id && amount == product.amount && categoryId == product.categoryId && maxSpeed == product.maxSpeed && maxLoad == product.maxLoad && manufacturer == product.manufacturer && Objects.equals(name, product.name) && Objects.equals(price, product.price) && Objects.equals(lastUpdate, product.lastUpdate);
+        return id == product.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, price, amount, categoryId, lastUpdate, maxSpeed, maxLoad, manufacturer);
+        return Objects.hash(id);
     }
 }
 

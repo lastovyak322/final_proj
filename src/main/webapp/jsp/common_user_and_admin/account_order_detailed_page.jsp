@@ -14,7 +14,7 @@
     <jsp:useBean id="accountOrderProduct" class="com.epam.lastoviak.online_store.db.dto.AccountOrderProduct"/>
 </head>
 <body>
-<p><a href="../main_page.jsp">Main Page</a></p>
+<%@ include file="/jspf/header.jspf" %>
 
 
 <c:set var="totalPrice" value="${0}"/>

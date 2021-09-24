@@ -42,7 +42,6 @@ public class ProductDAO {
             "SELECT amount FROM product WHERE id=? ";
 
 
-
     private boolean addProduct(Product product) {
         boolean ans = false;
         Connection connection = null;
@@ -118,8 +117,6 @@ public class ProductDAO {
     }
 
 
-
-
     public List<Product> getProductsByCategoryId(int categoryId) {
         List<Product> productList = new ArrayList<>();
         Product product = null;
@@ -190,7 +187,7 @@ public class ProductDAO {
 
     }
 
-    public List<Product> getProductsByGeneratedSql(String sqlQuery, int limit,int recordsPerPage) {
+    public List<Product> getProductsByGeneratedSql(String sqlQuery, int limit, int recordsPerPage) {
         List<Product> productList = new ArrayList<>();
         Product product = null;
         Connection connection = null;
@@ -354,9 +351,8 @@ public class ProductDAO {
     }
 
 
-
     public boolean decreaseAmountUponPurchase(Connection con, List<Product> productList, Map<Product, Integer> cart) throws Exception {
-        boolean ans =false;
+        boolean ans = false;
         Set<Map.Entry<Product, Integer>> updatedProductSet;
 
         productList.forEach(x -> cart.put(x, cart.remove(x)));
@@ -383,11 +379,11 @@ public class ProductDAO {
             int[] result = pstm.executeBatch();
             for (int x : result) {
                 if (x < 0) {
-                   return false;
+                    return false;
                 }
             }
 
-            ans=true;
+            ans = true;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } finally {
@@ -397,28 +393,31 @@ public class ProductDAO {
         return ans;
     }
 
-    public List<Product> selectForRegister(Connection con, Set<Map.Entry<Product, Integer>> cartSet) {
+    public List<Product> getUpdatedProductListFromCart(Set<Map.Entry<Product, Integer>> cartSet) {
         List<Product> productList = new ArrayList<>();
         Product product = null;
         StringJoiner sj = new StringJoiner(",", "(", ")");
         cartSet.forEach(x -> sj.add(String.valueOf(x.getKey().getId())));
-
+        Connection con =null;
         PreparedStatement pstm = null;
         ResultSet rs = null;
         try {
-            System.out.println("SELECT FROM product WHERE id IN"+sj);
-            pstm = con.prepareStatement("SELECT * FROM product WHERE id IN"+sj);
-            rs = pstm.executeQuery();
-            while (rs.next()) {
-                product = new ProductFiller().fill(rs);
-                productList.add(product);
-            }
-
+           con = dbManager.getConnection();
+           if(con!=null) {
+               System.out.println("SELECT FROM product WHERE id IN" + sj);
+               pstm = con.prepareStatement("SELECT * FROM product WHERE id IN" + sj);
+               rs = pstm.executeQuery();
+               while (rs.next()) {
+                   product = new ProductFiller().fill(rs);
+                   productList.add(product);
+               }
+           }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } finally {
             dbManager.closeResultSet(rs);
             dbManager.closePreparedStatement(pstm);
+            dbManager.closeConnection(con);
         }
         System.out.println(productList);
         return productList;

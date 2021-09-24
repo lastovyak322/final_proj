@@ -22,9 +22,10 @@ public class CommandAccessFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
-        accessMap.put(2, asList(filterConfig.getInitParameter("admin")));
         outOfControl = asList(filterConfig.getInitParameter("out-of-control"));
         commons = asList(filterConfig.getInitParameter("commonForRegisterUserAndAdmin"));
+        accessMap.put(1,commons);
+        accessMap.put(2, asList(filterConfig.getInitParameter("admin")));
     }
 
     @Override
@@ -64,11 +65,12 @@ public class CommandAccessFilter implements Filter {
         }
 
         Integer roleId = (Integer) session.getAttribute("roleId");
-        {
-            if (roleId == null)
-                return false;
+
+        if (roleId == null) {
+            return false;
         }
-        return commons.contains(commandName);
+        return accessMap.get(roleId).contains(commandName)
+                || commons.contains(commandName);
     }
 
 

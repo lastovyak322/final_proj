@@ -1,36 +1,27 @@
 
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <html>
-<head>
-    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
+
+<head>
     <title>Магазин</title>
 </head>
 <body>
+<%@ include file="/jspf/header.jspf" %>
 <br>
 <br>
 <br>
-<c:choose>
-    <c:when test="${sessionScope.account==null}"> <a href="login_page.jsp"> Login></a></c:when>
-    <c:when test="${sessionScope.account.roleId==2}"><a href="admin/admin_page.jsp"> AdminMenu</a> </c:when>
-    <c:when test="${sessionScope.account.roleId==1}"><a href="common_user_and_admin/account_settings_page.jsp"> UserMenu</a></c:when>
-</c:choose>
-<p><a href="account_cart_page.jsp">Cart</a> </p>
 <br>
 <br>
 <br>
-Categories
+<fmt:message key="main_page.jsp.categories" />
 <br>
-<a href="/hello?command=showProductsByCategory&categoryId=1&filter=OFF">Kick scooters</a>
+<a href="/hello?command=showProductsByCategory&categoryId=1">Kick scooters</a>
 <br>
-<a href="/hello?command=showProductsByCategory&categoryId=2&filter=OFF">Hoverboards</a>
-
-
-
-
-
+<a href="/hello?command=showProductsByCategory&categoryId=2">Hoverboards</a>
 <br>
 
 

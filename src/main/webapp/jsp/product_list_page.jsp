@@ -5,7 +5,7 @@
   Time: 16:45
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <html>
 <head>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -15,9 +15,7 @@
     <title>Title</title>
 </head>
 <body>
-<p><a href="main_page.jsp">Main Page</a></p>
-
-<br>
+<%@ include file="/jspf/header.jspf" %>
 
 <c:forEach var="product" items="${productList}">
     <p>${product.name}</p>
@@ -74,7 +72,7 @@ Filter
     <br>
     Sort by
     <br>
-    <select name="orderBy">
+    <select name="orderBy" onchange="submit()">
         <option selected value="def">default</option>
         <option value="cheap">cheap->exp</option>
         <option value="expensive">exp->cheap</option>

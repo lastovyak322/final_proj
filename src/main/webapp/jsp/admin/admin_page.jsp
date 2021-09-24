@@ -11,9 +11,9 @@
     <title>Title</title>
 </head>
 <body>
-Admin page
-<p><a href="../main_page.jsp">Main Page</a></p>
-<p><a href="/hello?command=logout" >Logout</a></p>
+<%@ include file="/jspf/header.jspf" %>
+
+<fmt:message key="header.jsp.admin_menu" />
 <p><a href="change_user_status_page.jsp" >Block/Unblock User</a></p>
 <p><a href="/hello?command=getAllAccountOrders" >Show Orders</a></p>
 </body>

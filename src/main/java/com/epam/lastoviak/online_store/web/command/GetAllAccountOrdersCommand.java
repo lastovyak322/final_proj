@@ -2,19 +2,17 @@ package com.epam.lastoviak.online_store.web.command;
 
 import com.epam.lastoviak.online_store.db.dao.AccountOrderDao;
 import com.epam.lastoviak.online_store.db.dto.AccountOrder;
-import com.epam.lastoviak.online_store.db.dto.Product;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import java.util.List;
 
-import static com.epam.lastoviak.online_store.web.Path.ACCOUNT_ORDERS_LIST_PAGE;
+import static com.epam.lastoviak.online_store.web.Path.ACCOUNT_ORDER_LIST_PAGE;
 import static com.epam.lastoviak.online_store.web.Path.ERROR_PAGE;
 
-public class GetAllAccountOrderCommand extends Command {
+public class GetAllAccountOrdersCommand extends Command {
     private static final Logger log = Logger.getLogger(LoginCommand.class);
 
     @Override
@@ -44,7 +42,7 @@ public class GetAllAccountOrderCommand extends Command {
         request.setAttribute("accountOrderList", accountOrderList);
         request.setAttribute("numbOfPages", numbOfPages);
         request.setAttribute("currentPage", page);
-        path = ACCOUNT_ORDERS_LIST_PAGE;
+        path = ACCOUNT_ORDER_LIST_PAGE;
 
         return path;
     }

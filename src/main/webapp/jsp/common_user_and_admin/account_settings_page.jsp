@@ -11,16 +11,13 @@
     <title>Title</title>
 </head>
 <body>
-
-Account settings page
-<p><a href="../main_page.jsp">Main Page</a></p>
-
-<form action="/hello" method="get">
-    <input type="hidden" name="command" value="logout">
-    <button type="submit">Logout</button>
+<%@ include file="/jspf/header.jspf" %>
 
 
-</form>
+<fmt:message key="header.jsp.user_menu" />
+<a href="/hello?command=getAccountOrdersByAccountId"><fmt:message key="account_settings.jsp.orders_history"/></a>
+
+
 
 
 </body>
